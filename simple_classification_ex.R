@@ -216,7 +216,7 @@ dataset3classes <- rbind(dataset,
 
 dataset3classes <- dataset3classes[sample(nrow(dataset3classes)),]
 
-# Percent to be used as trainng data
+# Percent to be used as training data
 
 pctTrain <- 0.7
 
@@ -258,8 +258,30 @@ simple_regression_predict <- function(newdata, params){
     instance <- newdata[i,]
     
     # Return the mean value of the corresponding class stored in params
-    pred <- params[which(names(params) == instances$class)]
+    pred <- params[which(names(params) == instance$class)]
     
     predictions <- c(predictions, pred)
   }
 }
+
+pctTrain <- 0.7
+
+set.seed(123)
+
+idxs <- sample(nrow(dataset),
+               size = nrow(dataset) * pctTrain,
+               replace = F
+               )
+
+trainset <- dataset[idxs,]
+
+testset <- dataset[-idxs,]
+
+# Reuse train f(x)
+params <- simple_model_train(trainset, mean)
+
+# predict spees on the test set
+test_predictions <-
+  simple_regression_predict(testset, params)
+
+head(test_predictions)
