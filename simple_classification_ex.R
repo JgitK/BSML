@@ -57,6 +57,15 @@ legend("topleft", c("tiger","leopard"),
 
 #dev.off()
 
+## STEPS TO CREATE CLASSIFICATION MODEL ##
+
+# 1.) Create training function
+# 2.) Create prediction function
+# 3.) Partition data (holdout/k folds)
+# 4.) Find parameters on trainset
+# 5.) Use params in prediction function to create model
+# 6.) Compute test accuracy and train accuracy
+
 # Define a simple classifier that learns a centrality measure
 # for each class
 simple_model_train <- function(data, centrality = mean){
@@ -262,6 +271,7 @@ simple_regression_predict <- function(newdata, params){
     
     predictions <- c(predictions, pred)
   }
+  return(predictions)
 }
 
 pctTrain <- 0.7
@@ -285,3 +295,17 @@ test_predictions <-
   simple_regression_predict(testset, params)
 
 head(test_predictions)
+
+# Mean Absolute Error (MAD) on test set - Accuracy
+mean(abs(test_predictions - testset$speed))
+
+# Test on training set
+train_predictions <- 
+  simple_regression_predict(trainset, params)
+
+mean(abs(train_predictions - trainset$speed))
+
+
+
+
+
