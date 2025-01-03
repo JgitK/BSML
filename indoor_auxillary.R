@@ -35,4 +35,29 @@ Mode <- function(x) {
   ux[which.max(tabulate(match(x, ux)))]
 }
 
-knn_classifier
+knn_classifier <- function(dataset, k, trainSetIndices, testSetIndices){
+  
+  groundTruth <- NULL
+  predictions <- NULL
+  
+  for(queryInstance in testSetIndices){
+    distanceToQuery <- NULL
+    
+    for(trainInstance in trainSetIndices){
+      jd <- jaccardDistance(dataset[[queryInstance]]$accessPoints$mac,
+                            dataseet[[trainInstance]]$accessPoint$mac)
+      distanceToQuery <- c(distanceToQuery, jd)
+    }
+    
+    indices <- sort(distanceToQuery, index.return = TRUE)$ix
+    indices <- indices[1:k]
+    nnIndices <- trainSetIndices[Indices] # indices of the k nearest neighbors
+    nnInstances <- dataset[nnIndices] # get the actual instances
+    nnClasses <- sapply(nnInstances, function(e){e[[1]]}) # get their respective class
+    prediction <- Mode(nnclasses)
+    predictions <- c(predictions, prediction)
+    groundTruth <- c(groundTruth, dataset[[queryInstance]]$locationID)
+  }
+  
+  return(list(predictions = predictions, groundTruth = groundTruth))
+}
